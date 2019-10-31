@@ -131,7 +131,7 @@ func newTracerWrapper(t *tracer) *TracerWrapper {
 }
 
 // For sql's select ...
-func (t *TracerWrapper) WrapQueryContext(fn QueryContextFunc, query string, args ...interface{}) QueryContextFunc {
+func (t *TracerWrapper) WrapQueryContext(fn QueryContextFunc) QueryContextFunc {
 	tracerFn := func(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error) {
 		t.tracer.dbStatement = t.QueryBuilder(query, args...)
 		t.tracer.do(ctx)
@@ -143,12 +143,12 @@ func (t *TracerWrapper) WrapQueryContext(fn QueryContextFunc, query string, args
 }
 
 // For sql's update、insert、delete ...
-func (t *TracerWrapper) WrapExecContext(fn ExecContextFunc, query string, args ...interface{}) ExecContextFunc {
-	tracerFn := func(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
-		t.tracer.dbStatement = t.QueryBuilder(query, args...)
+func (t *TracerWrapper) WrapExecContext(fn ExecContextFunc) ExecContextFunc {
+	tracerFn := func(ctx context.Context, sql string, args ...interface{}) (sql.Result, error) {
+		t.tracer.dbStatement = t.QueryBuilder(sql, args...)
 		t.tracer.do(ctx)
 		defer t.tracer.close()
-		return fn(ctx, query, args...)
+		return fn(ctx, sql, args...)
 	}
 
 	return tracerFn

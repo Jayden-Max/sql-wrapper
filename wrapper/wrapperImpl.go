@@ -6,15 +6,15 @@ import (
 )
 
 // define the query func with context.
-type QueryContextFunc func(ctx context.Context, query string, args ...interface{}) (*sql.Rows, error)
+type QueryContextFunc func(ctx context.Context, sql string, args ...interface{}) (*sql.Rows, error)
 
 // define the exec func with context.
-type ExecContextFunc func(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
+type ExecContextFunc func(ctx context.Context, sql string, args ...interface{}) (sql.Result, error)
 
 // define the database operation.
 type Wrapper interface {
-	WrapQueryContext(fn QueryContextFunc, sql string, args ...interface{}) QueryContextFunc
-	WrapExecContext(fn ExecContextFunc, sql string, args ...interface{}) ExecContextFunc
+	WrapQueryContext(fn QueryContextFunc) QueryContextFunc
+	WrapExecContext(fn ExecContextFunc) ExecContextFunc
 }
 
 // TracerOption define the wrapper's option
