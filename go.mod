@@ -1,4 +1,4 @@
-module sql-wrapper
+module github.com/Jayden-Max/sql-wrapper
 
 go 1.13
 
